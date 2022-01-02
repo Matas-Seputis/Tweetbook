@@ -12,7 +12,9 @@
         {
             public const string GetAll = Base + "/posts";
 
-            public const string Update= Base + "/posts/{postId}";
+            public const string Update = Base + "/posts/{postId}";
+
+            public const string Delete = Base + "/posts/{postId}";
 
             public const string Get = Base + "/post/{postId}";
 
