@@ -50,7 +50,7 @@ namespace Tweetbook
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
             var swaggerOptions = new SwaggerOption();
             Configuration.GetSection(nameof(SwaggerOption)).Bind(swaggerOptions);

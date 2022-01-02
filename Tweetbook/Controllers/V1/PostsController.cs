@@ -54,11 +54,10 @@ namespace Tweetbook.Controllers.V1
             return NotFound();
         }
 
-
         [HttpGet(ApiRoutes.Posts.Get)]
         public async Task<IActionResult> Get([FromRoute]Guid postId)
         {
-            var post = _postService.GetPostByIdAsync(postId);
+            var post = await _postService.GetPostByIdAsync(postId);
 
             if(post == null)
                    return NotFound();
