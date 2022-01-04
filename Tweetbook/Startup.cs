@@ -52,6 +52,8 @@ namespace Tweetbook
 
             app.UseAuthentication();
 
+            app.UseAuthorization();
+
             var swaggerOptions = new SwaggerOption();
             Configuration.GetSection(nameof(SwaggerOption)).Bind(swaggerOptions);
 
