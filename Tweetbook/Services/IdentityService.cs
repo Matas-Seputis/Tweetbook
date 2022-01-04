@@ -26,7 +26,7 @@ namespace Tweetbook.Services
         {
             var existingUser = await _userManager.FindByEmailAsync(email);
 
-            if(existingUser != null)
+            if (existingUser != null)
             {
                 return new AuthenticationResult
                 {
@@ -34,21 +34,50 @@ namespace Tweetbook.Services
                 };
             }
             var newUser = new IdentityUser
-            { 
+            {
                 Email = email,
                 UserName = email
             };
 
             var createdUser = await _userManager.CreateAsync(newUser, password);
 
-            if(!createdUser.Succeeded)
+            if (!createdUser.Succeeded)
             {
                 return new AuthenticationResult
                 {
                     ErrorMessage = createdUser.Errors.Select(x => x.Description)
                 };
             }
+            return GenerateAuthenticationResultForUser(newUser);
+        }
 
+        public async Task<AuthenticationResult> LoginAsync(string email, string password)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return new AuthenticationResult
+                {
+                    ErrorMessage = new[] { "User does not exist" }
+                };
+            }
+
+            var userHasValidPassword = await _userManager.CheckPasswordAsync(user, password);
+
+            if (!userHasValidPassword)
+            {
+                return new AuthenticationResult
+                {
+                    ErrorMessage = new[] { "User/Password combination is wrong" }
+                };
+            }
+
+            return GenerateAuthenticationResultForUser(user);
+        }
+
+        private AuthenticationResult GenerateAuthenticationResultForUser(IdentityUser newUser)
+        { 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
             var tokenDescription = new SecurityTokenDescriptor
